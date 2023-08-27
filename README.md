@@ -134,7 +134,7 @@ These formulas serve as a means to verify the accuracy of our model. This will b
 ### Case1: Poiseuille flow:
 <div style="display: flex; justify-content: space-between;">
   <img src="Images/ux_poiseuille.png" alt="ux Poiseuille" width="400" height="300">
-  <img src="relative_path_to_image_2" alt="uy Poiseuille" width="400" height="300">
+  <img src="Images/uy_poiseuille.png" alt="uy Poiseuille" width="400" height="300">
 </div>
 
 ## Testing
