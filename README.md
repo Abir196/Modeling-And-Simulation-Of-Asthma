@@ -181,15 +181,28 @@ The result of solving our matrix system indeed reveals plausible profiles. The v
 The answer to the second question seems more straightforward. In fact, we compute the norm of the vector AX - B: ‖AX -  B‖: `/2D case with one tightening.py` we find that it's indeed equal to 0. Thus, the two retrieved profiles are indeed solutions to our problem.
 
 For the second question, the answer requires some effort. The issue of grid artifacts in the middle arises from using centered differences when discretizing the equations. The solution is to replace them with one-sided differences, but life isn't as simple! Centered differences allow us to achieve more accurate solutions that preserve flow (99% accuracy). Therefore, Question 1 boils down to finding a compromise between flow conservation and solution smoothness (lack of grid artifacts). We introduce a factor $\alpha$ that belongs to the interval $[0,1]$, which from this point forward plays a crucial role in solving our problem. $\alpha$ helps us define a new derivative, introduced as follows:
-
-$$\frac{dg_i}{dx}_{\text{nouvelle}} = \alpha \frac{g_{i+1} - g_{i-1}}{2 \cdot dx} + (1 - \alpha) \frac{g_i - g_{i-1}}{dx}$$
+$$(dg_i)/dx_{new}=α.(g_{i+1}-g_{i-1})/(2.dx)+(1-α).(g_i-g_{i-1})/dx$$
 
 
 This new form of the derivative ensures two major objectives: maximizing flow conservation and presenting a smoother solution with fewer grid artifacts.
 
+Our study led us to a factor α=0.9, and the solution obtained after introducing this factor is as follows:
+
+<p align="center">
+  <img src="Images/velocity_alpha.png" alt="velocity alpha" width="250" height="200" style="margin-right: 20px;"/>
+  <img src="Images/pressure_alpha.png" alt="pressure alpha" width="250" height="200" style="margin-left: 20px;"/>
+</p>
+
+With α=0.9, the variation in flow is 1.13%, and the solutions are smoother than before.
+
+Tests will be run on this solution in the following section.
+
 ## Testing
 
-...
+Now that we have established the general profile of our solution, it's time to conduct a study on this solution to gather more insights:
+
+Firstly, we ensure the validity of our visual observations. The Poiseuille profile outside the constriction and the modification within the constriction must be verified. To do this, we plot the velocity curve across several cross-sections before, during, and after the constriction. The result is as follows:
+
 
 ## Usage
 
