@@ -129,16 +129,17 @@ These formulas serve as a means to verify the accuracy of our model. This will b
 In the pursuit of modeling the asthma problem and after studying the simplistic scenario of a straight tube, we introduce a single constriction to our tube. In this initial step, the constriction has a width of $\epsilon_2$ and a length of $\epsilon_1$. Our tube takes on the following form:
 
 <p align="center">
-  <img src="Images/one_tightening1.png" alt="ux Poiseuille"/>
+  <img src="Images/one_tightening1.png" alt="one tightening"/>
 </p>
 
 
 To model the fluid flow inside the tube, we need to formulate the flow equations along with appropriate boundary conditions to obtain plausible results. The equations and boundary conditions we have chosen are as follows:
 
 <p align="center">
-  <img src="Images/one_tightening_model1.png" alt="ux Poiseuille"/>
+  <img src="Images/one_tightening_model1.png" alt="one tightening model"/>
 </p>
 
+The results are shown in the following section.
 
 ## Results
 
