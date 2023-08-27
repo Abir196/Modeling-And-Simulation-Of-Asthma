@@ -168,6 +168,24 @@ This also aligns with what is depicted in our plots. Finally, for an additional 
 
 We populate the matrix with the equations indicated in Figure 2, discretized in the same manner as in the first case. Solving the matrix equation yields the following velocity and pressure profiles:
 
+<p align="center">
+  <img src="Images/velocity_one_tight.png" alt="velocity Poiseuille" width="250" height="200" style="margin-right: 20px;"/>
+  <img src="Images/pressure_one_tight.png" alt="pressure Poiseuille" width="250" height="200" style="margin-left: 20px;"/>
+</p>
+
+The result of solving our matrix system indeed reveals plausible profiles. The velocity likely increases within the constriction, which aligns with the conservation of flow inside the tube. Similarly, the pressure decreases from the inlet value to the outlet value. Both figures lead to two observations:
+
+1. Can we improve our solver to obtain smoother solutions with fewer grid artifacts during display?
+2. Have we properly solved our system? In other words, do the recovered profiles indeed satisfy A.X = B?
+
+The answer to the second question seems more straightforward. In fact, we compute the norm of the vector AX - B: ‖AX -  B‖: `/2D case with one tightening.py` we find that it's indeed equal to 0. Thus, the two retrieved profiles are indeed solutions to our problem.
+
+For the second question, the answer requires some effort. The issue of grid artifacts in the middle arises from using centered differences when discretizing the equations. The solution is to replace them with one-sided differences, but life isn't as simple! Centered differences allow us to achieve more accurate solutions that preserve flow (99% accuracy). Therefore, Question 1 boils down to finding a compromise between flow conservation and solution smoothness (lack of grid artifacts). We introduce a factor $\alpha$ that belongs to the interval $[0,1]$, which from this point forward plays a crucial role in solving our problem. $\alpha$ helps us define a new derivative, introduced as follows:
+
+$$\frac{dg_i}{dx}_{\text{nouvelle}} = \alpha \frac{g_{i+1} - g_{i-1}}{2 \cdot dx} + (1 - \alpha) \frac{g_i - g_{i-1}}{dx}$$
+
+
+This new form of the derivative ensures two major objectives: maximizing flow conservation and presenting a smoother solution with fewer grid artifacts.
 
 ## Testing
 
