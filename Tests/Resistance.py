@@ -1,0 +1,1018 @@
+# pour le point d'indice k
+
+
+# A[3 * k][ k ]  désigne le le coefficient multiplie par ux dans la première équation
+
+
+# A[3 * k + 1][ k +N*M ]  désigne le coefficient multiplie par uy dans la deuxième équation
+
+
+# A[3 * k + 2][ k + 2*N*M ]désigne le coefficient multiplie par P dans la 3eme équation
+
+
+# .........et ainsi de suite
+
+
+import math
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+from statistics import mean
+
+# la pression à l'entrée
+
+Pe = 101324.4465
+
+# la pression à la sortie
+
+Ps = 101324.4465 - 0.013
+
+# la longeur du tube
+
+L = 0.024576
+
+# la largeur du tube
+
+l = 0.008192
+
+# l'objectif est d'avoir un un resserrement qui ne dépend pas de la discrétisation
+
+# pour cela on divise le tube sur 3 parties avec Lh2 represente epsilon 2 et lh2 represente epsilon 1
+
+# Lhi = Lhi * L /(Lh1+Lh2+Lh3)
+
+# remarque Lh1+Lh2+Lh3 = Lb1+Lb2+Lb3 car on doit conserver la même longueur du tube dans le bas et le haut
+
+
+Lh1 = 10
+
+Lh2 = 10
+
+Lh3 = 10
+
+lh2 = 2
+
+Lb1 = 10
+
+Lb2 = 10
+
+Lb3 = 10
+
+lb2 = 0
+
+# k est le coefficient pour multiplier le nombre de pas de la discrétisation suivant X
+
+# remarque: 0<k
+
+k = 4
+
+dx = math.gcd(Lh1, Lh2, Lh3, Lb1, Lb2, Lb3) / k
+
+# haut est le nombre de discritisation suivant Y
+
+haut = 10
+
+dy = k / haut
+
+# le nombre de discrétisation horizontale
+
+N = int((Lh1 + Lh2 + Lh3) / dx)
+
+# le nombre de discrétisation verticale
+
+M = int(haut / dy)
+
+# alpha est le coefficient responsable à equilibrer entre le dérivé centrale et le dérivé decentré
+
+# remarque: 0<alpha <=1
+
+alpha = 0.6
+
+# n represente le coefficient de viscosité
+
+n = 0.00002
+
+# invdx est l'inverse de dx
+
+invdx = N / L
+
+# invdy est l'inverse de dy
+
+invdy = M / l
+
+# le nombre de point dans la discrétisation
+
+nb = int(N * M)
+
+print("N = ", N, " M = ", M)
+
+deb = 4  # x où calculer le débit
+
+# Lb et Lh representent les parois bas et haut du tube on les remplit par un indice entre 0 et nb-1
+
+# xb et yb sont les coordonnées de Lb
+
+Lb = []
+
+xb = []
+
+yb = []
+
+Lh = []
+
+xh = []
+
+yh = []
+
+# Dans la suit on remplit Lh,xh,yh,Lb,xb et yb
+
+for i in range(int(Lh1 / dx) + 1):
+    Lh.append(N * (M - 1) + i)
+
+    xh.append((N * (M - 1) + i) % N)
+
+    yh.append((N * (M - 1) + i) // N)
+
+for i in range(int(Lh2 / dx) + 1):
+    Lh.append(Lh1 / dx + N * (M - 1) + i - (lh2 / dy) * N)
+
+    xh.append((Lh1 / dx + N * (M - 1) + i - (lh2 / dy) * N) % N)
+
+    yh.append((Lh1 / dx + N * (M - 1) + i - (lh2 / dy) * N) // N)
+
+for i in range(int(Lh3 / dx)):
+    Lh.append((Lh1 + Lh2) / dx + N * (M - 1) + i)
+
+    xh.append(((Lh1 + Lh2) / dx + N * (M - 1) + i) % N)
+
+    yh.append(((Lh1 + Lh2) / dx + N * (M - 1) + i) // N)
+
+for i in range(int(lh2 / dy) - 1):
+    Lh.append(Lh1 / dx + N * (M - 1) - i * N - N)
+
+    xh.append((Lh1 / dx + N * (M - 1) - i * N - N) % N)
+
+    yh.append((Lh1 / dx + N * (M - 1) - i * N - N) // N)
+
+    Lh.append((Lh1 + Lh2) / dx + N * (M - 1) - i * N - N)
+
+    xh.append(((Lh1 + Lh2) / dx + N * (M - 1) - i * N - N) % N)
+
+    yh.append(((Lh1 + Lh2) / dx + N * (M - 1) - i * N - N) // N)
+
+for i in range(int(Lb1 / dx) + 1):
+    Lb.append(i)
+
+    xb.append((i) % N)
+
+    yb.append((i) // N)
+
+for i in range(int(Lb2 / dx) + 1):
+    Lb.append(Lb1 / dx + i + (lb2 / dy) * N)
+
+    xb.append((Lb1 / dx + i + (lb2 / dy) * N) % N)
+
+    yb.append((Lb1 / dx + i + (lb2 / dy) * N) // N)
+
+for i in range(int(Lb3 / dx)):
+    Lb.append((Lb1 + Lb2) / dx + i)
+
+    xb.append(((Lb1 + Lb2) / dx + i) % N)
+
+    yb.append(((Lb1 + Lb2) / dx + i) // N)
+
+for i in range(int(lb2 / dy) - 1):
+    Lb.append(Lb1 / dx + i * N + N)
+
+    xb.append((Lb1 / dx + i * N + N) % N)
+
+    yb.append((Lb1 / dx + i * N + N) // N)
+
+    Lb.append((Lb1 + Lb2) / dx + i * N + N)
+
+    xb.append(((Lb1 + Lb2) / dx + i * N + N) % N)
+
+    yb.append(((Lb1 + Lb2) / dx + i * N + N) // N)
+
+# A * X = B
+
+A = np.zeros((3 * nb, 3 * nb))
+
+B = np.zeros(3 * nb)
+
+# PN est la liste des points de l'asthme
+
+PN = []
+
+# dans la suite on replit PN
+
+for i in range(0, N):
+
+    j = i
+
+    while j not in Lb:
+        PN.append(j)
+
+        j = j + N
+
+for i in range(nb - N, nb):
+
+    j = i
+
+    while j not in Lh:
+        PN.append(j)
+
+        j = j - N
+
+
+# la fonction f(k) précise ou appartient le point k dans le cas ou l'asthme n'existe pas
+
+def f(a):
+    if (a > 0 and a < N - 1):  # parois basse
+
+        return "bas"
+
+
+
+
+
+    elif (a > (M - 1) * (N) and a < ((N) * (M)) - 1):  # parois haute
+
+        return "haut"
+
+
+
+
+    elif (a % (N) == 0 and a > 0 and a < (N) * (M - 1)):  # parois de l'entree
+
+        return "entree"
+
+
+
+
+    elif (a % (N) == N - 1 and a > N and a < N * M - 1):  # parois de la sortie
+
+        return "sortie"
+
+
+
+
+    elif (a == 0 or a == N * (M - 1) or a == N - 1 or a == (N) * (M) - 1):  # coins du tube
+
+        return "critique"
+
+
+
+
+    else:
+
+        return "Milieu"  # milieu du tube
+
+
+# la fonction pc(k) remplit les équations des points des parois superieure et inferieure
+
+def pc(k):
+    if k in Lb:
+
+        # la premiere équation Ux=0
+
+        A[3 * k][k] = 1
+
+        B[3 * k] = 0
+
+        # la deuxieme équation Uy=0
+
+        A[3 * k + 1][k + nb] = 1
+
+        B[3 * k + 1] = 0
+
+        # la troisieme équation dépend de la position du point
+
+        if k + 1 in Lb and k - 1 in Lb:
+
+            #     .+.
+
+            #     . .
+
+            #   .+. .+.
+
+            # Uy(k+N)-Uy(k)=0
+
+            A[3 * k + 2][k + nb] = 1
+
+            A[3 * k + 2][k + N + nb] = -1
+
+
+
+        elif k + 1 in Lb and k + N in Lb:
+
+            #     ...
+
+            #     . .
+
+            #   ... +..
+
+            # (P(k+1)+P(k)-2*P(k))/(dx**2)+(P(k+N)+P(k)-2*P(k))/(dy**2)=0
+
+            A[3 * k + 2][k + 2 * nb] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2 + n * invdy ** 2
+
+            A[3 * k + 2][k + 1 + 2 * nb] = n * invdx ** 2
+
+            A[3 * k + 2][k + N + 2 * nb] = n * invdy ** 2
+
+
+
+        elif k + N in Lb and k - 1 in Lb:
+
+            #     ...
+
+            #     . .
+
+            #   ..+ ...
+
+            # (P(k-1)+P(k)-2*P(k))/(dx**2)+(P(k+N)+P(k)-2*P(k))/(dy**2)=0
+
+            A[3 * k + 2][k + 2 * nb] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2 + n * invdy ** 2
+
+            A[3 * k + 2][k - 1 + 2 * nb] = n * invdx ** 2
+
+            A[3 * k + 2][k + N + 2 * nb] = n * invdy ** 2
+
+
+
+        elif (k + N in Lb and k - N in Lb) and (f(k + 1) == "Milieu" or f(k + 1) == "sortie") and k - 1 in PN:
+
+            #     ...
+
+            #     . +
+
+            #   ... ...
+
+            # Ux(k+1)-Ux(k)=0
+
+            A[3 * k + 2][k] = 1
+
+            A[3 * k + 2][k + 1] = -1
+
+
+
+        elif (k + N in Lb and k - N in Lb) and (f(k - 1) == "Milieu" or f(k - 1) == "entree") and k - 1 not in PN:
+
+            #     ...
+
+            #     + .
+
+            #   ... ...
+
+            # Ux(k-1)-Ux(k)=0
+
+            A[3 * k + 2][k] = 1
+
+            A[3 * k + 2][k - 1] = -1
+
+
+
+        elif k - 1 in Lb and k - N in Lb:
+
+            #     ..+
+
+            #     . .
+
+            #   ... ...
+
+            # (Ux(k-1)-Ux(k+1))/dx+(Uy(k-N)-Uy(k+N))/dy=0
+
+            A[3 * k + 2][k + 1] = -invdx
+
+            A[3 * k + 2][k - 1] = invdx
+
+            A[3 * k + 2][k + N + nb] = invdy
+
+            A[3 * k + 2][k - N + nb] = -invdy
+
+
+
+        elif k + 1 in Lb and k - N in Lb:
+
+            #     +..
+
+            #     . .
+
+            #   ... ...
+
+            # (Ux(k-1)-Ux(k+1))/dx+(Uy(k-N)-Uy(k+N))/dy=0
+
+            A[3 * k + 2][k + 1] = -invdx
+
+            A[3 * k + 2][k - 1] = invdx
+
+            A[3 * k + 2][k + N + nb] = invdy
+
+            A[3 * k + 2][k - N + nb] = -invdy
+
+
+
+        else:
+
+            #         ...
+
+            #         . .
+
+            #   +.  ... ...
+
+            # P(k)=Pe
+
+            if k == 0:
+
+                A[3 * k + 2][k + 2 * nb] = 1
+
+                B[3 * k + 2] = Pe
+
+
+
+            #         ...
+
+            #         . .
+
+            #   ..  ... ...  .+
+
+            # P(k)=Ps
+
+            elif k == N - 1:
+
+                A[3 * k + 2][k + 2 * nb] = 1
+
+                B[3 * k + 2] = Ps
+
+        return "true"
+
+
+
+
+    elif k in Lh:
+
+        # la premiere équation Ux=0
+
+        A[3 * k][k] = 1
+
+        B[3 * k] = 0
+
+        # la deuxieme équation Uy=0
+
+        A[3 * k + 1][k + nb] = 1
+
+        B[3 * k + 1] = 0
+
+        # la troisieme équation dépend de la position du point
+
+        if k + 1 in Lh and k - 1 in Lh:
+
+            #       .+. .+.
+
+            #         . .
+
+            #         .+.
+
+            # Uy(k-N)-Uy(k)=0
+
+            A[3 * k + 2][k + nb] = 1
+
+            A[3 * k + 2][k - N + nb] = -1
+
+
+
+        elif k + 1 in Lh and k + N in Lh:
+
+            #       ... ...
+
+            #         . .
+
+            #         +..
+
+            # (Ux(k-1)-Ux(k+1))/dx+(Uy(k-N)-Uy(k+N))/dy=0
+
+            A[3 * k + 2][k + 1] = -invdx
+
+            A[3 * k + 2][k - 1] = invdx
+
+            A[3 * k + 2][k + N + nb] = invdy
+
+            A[3 * k + 2][k - N + nb] = -invdy
+
+
+
+        elif k + N in Lh and k - 1 in Lh:
+
+            #       ... ...
+
+            #         . .
+
+            #         ..+
+
+            # (Ux(k-1)-Ux(k+1))/dx+(Uy(k-N)-Uy(k+N))/dy=0
+
+            A[3 * k + 2][k + 1] = -invdx
+
+            A[3 * k + 2][k - 1] = invdx
+
+            A[3 * k + 2][k + N + nb] = invdy
+
+            A[3 * k + 2][k - N + nb] = -invdy
+
+
+
+        elif (k + N in Lh and k - N in Lh) and (f(k - 1) == "Milieu" or f(k - 1) == "entree") and k - 1 not in PN:
+
+            #       ... ...
+
+            #         + .
+
+            #         ...
+
+            # Ux(k-1)-Ux(k)=0
+
+            A[3 * k + 2][k] = 1
+
+            A[3 * k + 2][k - 1] = -1
+
+
+
+        elif (k + N in Lh and k - N in Lh) and (f(k + 1) == "Milieu" or f(k + 1) == "sortie") and k - 1 in PN:
+
+            #       ... ...
+
+            #         . +
+
+            #         ...
+
+            # Ux(k+1)-Ux(k)=0
+
+            A[3 * k + 2][k] = 1
+
+            A[3 * k + 2][k + 1] = -1
+
+
+
+        elif k - 1 in Lh and k - N in Lh:
+
+            #       ..+ ...
+
+            #         . .
+
+            #         ...
+
+            # (P(k-1)+P(k)-2*P(k))/(dx**2)+(P(k-N)+P(k)-2*P(k))/(dy**2)=0
+
+            A[3 * k + 2][k + 2 * nb] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2 + n * invdy ** 2
+
+            A[3 * k + 2][k - 1 + 2 * nb] = n * invdx ** 2
+
+            A[3 * k + 2][k - N + 2 * nb] = n * invdy ** 2
+
+
+
+        elif k + 1 in Lh and k - N in Lh:
+
+            #       ... +..
+
+            #         . .
+
+            #         ...
+
+            # (P(k+1)+P(k)-2*P(k))/(dx**2)+(P(k-N)+P(k)-2*P(k))/(dy**2)=0
+
+            A[3 * k + 2][k + 2 * nb] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2 + n * invdy ** 2
+
+            A[3 * k + 2][k + 1 + 2 * nb] = n * invdx ** 2
+
+            A[3 * k + 2][k - N + 2 * nb] = n * invdy ** 2
+
+
+
+        else:
+
+            #    +. ... ... ..
+
+            #         . .
+
+            #         ...
+
+            # P(k)=Pe
+
+            if k == nb - 1:
+
+                A[3 * k + 2][k + 2 * nb] = 1
+
+                B[3 * k + 2] = Ps
+
+
+
+            #    .. ... ... .+
+
+            #         . .
+
+            #         ...
+
+            # P(k)=Ps
+
+            elif k == nb - N:
+
+                A[3 * k + 2][k + 2 * nb] = 1
+
+                B[3 * k + 2] = Pe
+
+
+
+            else:
+
+                print("error")
+
+        return "true"
+
+
+
+    else:
+
+        return "false"
+
+
+# la boucle principale dans là quel pour chaque point de la discrétisation, on remplit les trois équations
+
+for k in range(nb):
+
+    # pos est l'emplacement du point dans le tube
+
+    pos = f(k)
+
+    # si (pc(k) == "true" ) alors le point est dans les parois et on remplit les trois équations dans la fonction pc
+
+    if pc(k) == "true":
+
+        next
+
+
+
+    # si k appatient à les points de l'asthme on met la vitesse nulle et la pression égale la pression à la sortie
+
+    # remarque les point de l'asthme n'ont pas d'effet sur le système
+
+    elif k in PN:
+
+        # UX=0
+
+        A[3 * k][k] = 1
+
+        B[3 * k] = 0
+
+        # UY
+
+        A[3 * k + 1][k + nb] = 1
+
+        B[3 * k + 1] = 0
+
+        # P(k)= Ps
+
+        A[3 * k + 2][k + 2 * nb] = 1
+
+        B[3 * k + 2] = Ps
+
+    # si k appartient au milieu du tube
+
+    elif pos == "Milieu":
+
+        # 1er équation Stokes suivant X
+
+        A[3 * k][k] = -2 * n * ((invdx ** 2) + (invdy ** 2))
+
+        A[3 * k][k - 1] = n * invdx ** 2
+
+        A[3 * k][k + 1] = n * invdx ** 2
+
+        A[3 * k][k + N] = n * invdy ** 2
+
+        A[3 * k][k - N] = n * invdy ** 2
+
+        A[3 * k][k + 1 + 2 * nb] = -(invdx / 2) * alpha
+
+        A[3 * k][k - 1 + 2 * nb] = (invdx / 2) * (2 - alpha)
+
+        A[3 * k][k + 2 * nb] = - (invdx) * (1 - alpha)
+
+        # 2eme équation Stokes suivant Y
+
+        A[3 * k + 1][k + nb] = -2 * n * ((invdx ** 2) + (invdy ** 2))
+
+        A[3 * k + 1][k - 1 + nb] = n * invdx ** 2
+
+        A[3 * k + 1][k + 1 + nb] = n * invdx ** 2
+
+        A[3 * k + 1][k + N + nb] = n * invdy ** 2
+
+        A[3 * k + 1][k - N + nb] = n * invdy ** 2
+
+        A[3 * k + 1][k + N + 2 * nb] = (invdy / 2) * alpha
+
+        A[3 * k + 1][k - N + 2 * nb] = (invdy / 2) * (alpha - 2)
+
+        A[3 * k + 1][k + 2 * nb] = -(invdy) * (alpha - 1)
+
+        # 3eme équation conservation de masse
+
+        A[3 * k + 2][k + 1] = - invdx / 2
+
+        A[3 * k + 2][k - 1] = invdx / 2
+
+        A[3 * k + 2][k + N + nb] = invdy / 2
+
+        A[3 * k + 2][k - N + nb] = - invdy / 2
+
+
+
+    elif f(k) == "entree":
+
+        # 1er équation Stokes suivant X
+
+        A[3 * k][k] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2
+
+        A[3 * k][k + 1] = n * invdx ** 2
+
+        A[3 * k][k + N] = n * invdy ** 2
+
+        A[3 * k][k - N] = n * invdy ** 2
+
+        A[3 * k][k + 2 * nb] = invdx
+
+        A[3 * k][k + 1 + 2 * nb] = -invdx
+
+        # 2eme équation Stokes suivant Y
+
+        A[3 * k + 1][k + nb] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2
+
+        A[3 * k + 1][k + 1 + nb] = n * invdx ** 2
+
+        A[3 * k + 1][k + N + nb] = n * invdy ** 2
+
+        A[3 * k + 1][k - N + nb] = n * invdy ** 2
+
+        A[3 * k + 1][k + N + 2 * nb] = -invdy / 2
+
+        A[3 * k + 1][k - N + 2 * nb] = invdy / 2
+
+        # 3eme équation P(k)=Pe
+
+        A[3 * k + 2][k + 2 * nb] = 1
+
+        B[3 * k + 2] = Pe
+
+
+
+    elif pos == "sortie":
+
+        # 1er équation Stokes suivant X
+
+        A[3 * k][k + 2 * nb] = -invdx
+
+        A[3 * k][k - 1 + 2 * nb] = invdx
+
+        A[3 * k][k] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2
+
+        A[3 * k][k - 1] = n * invdx ** 2
+
+        A[3 * k][k + N] = n * invdy ** 2
+
+        A[3 * k][k - N] = n * invdy ** 2
+
+        # 2eme équation Stokes suivant Y
+
+        A[3 * k + 1][k + N + 2 * nb] = -invdy / 2
+
+        A[3 * k + 1][k - N + 2 * nb] = invdy / 2
+
+        A[3 * k + 1][k + nb] = -2 * n * ((invdx ** 2) + (invdy ** 2)) + n * invdx ** 2
+
+        A[3 * k + 1][k - 1 + nb] = n * invdx ** 2
+
+        A[3 * k + 1][k + N + nb] = n * invdy ** 2
+
+        A[3 * k + 1][k - N + nb] = n * invdy ** 2
+
+        # 3eme équation P(k)=Ps
+
+        A[3 * k + 2][k + 2 * nb] = 1
+
+        B[3 * k + 2] = Ps
+
+# la resolution de A*X0=B
+
+X0 = np.dot(np.linalg.inv(A), B)
+
+# Conserver 4 chiffres après la virgule
+
+X = np.around(X0, decimals=4)
+
+# extraire Ux de X
+
+Ux = X[:nb]
+
+# extraire Uy de X
+
+Uy = X[nb:2 * nb]
+
+# extraire P de X
+
+P = X[2 * nb:]
+
+# calcule de la vitesse U(ux,uy)
+
+Ul = []
+
+for i in range(nb):
+    Ul.append(math.sqrt(Ux[i] ** 2 + Uy[i] ** 2))
+
+U = np.array(Ul)
+
+#############PRESSION DE POISEUILLE############
+
+P_sect1 = []
+
+for i in range(0, int((M - 1 - (lh2 / dy)))):
+    a = int((Lh1 / dx) + N * i)
+
+    P_sect1.append(P[a])
+
+P_sect2 = []
+
+for i in range(0, int((M - 1 - (lh2 / dy)))):
+    a = int(((Lh1 + Lh2) / dx) + N * i)
+
+    P_sect2.append(P[a])
+
+Ps1 = mean(P_sect1)
+
+Ps2 = mean(P_sect2)
+
+print('la pression à l entrée de resserrement ', Ps1)
+
+print('la pression à la sortie de resserrement ', Ps2)
+
+vit = []
+
+list_debit = []
+
+for j in range(N):
+
+    for i in range(0, M):
+        c = j + i * N
+
+        vit.append(Ul[c])
+
+    s = (np.array(vit) * 1 / invdy).sum()
+
+    list_debit.append(s)
+
+    vit.clear()
+
+mean_debit = mean(list_debit)
+
+list_debit.clear()
+
+for j in range(int(Lh1 / dx)):
+
+    for i in range(0, M):
+        c = j + i * N
+
+        vit.append(Ul[c])
+
+    s = (np.array(vit) * 1 / invdy).sum()
+
+    list_debit.append(s)
+
+    vit.clear()
+
+mean_debit1 = mean(list_debit)
+
+list_debit.clear()
+
+for j in range(int(Lh1 / dx), int((Lh1 + Lh2) / dx)):
+
+    for i in range(0, M):
+        c = j + i * N
+
+        vit.append(Ul[c])
+
+    s = (np.array(vit) * 1 / invdy).sum()
+
+    list_debit.append(s)
+
+    vit.clear()
+
+mean_debit2 = mean(list_debit)
+
+list_debit.clear()
+
+for j in range(int((Lh1 + Lh2) / dx), N):
+
+    for i in range(0, M):
+        c = j + i * N
+
+        vit.append(Ul[c])
+
+    s = (np.array(vit) * 1 / invdy).sum()
+
+    list_debit.append(s)
+
+    vit.clear()
+
+mean_debit3 = mean(list_debit)
+
+############# TABLE DES RESISTANCES ##########
+
+tab_Resist = [(-Ps1 + Pe) / mean_debit1, (-Ps2 + Ps1) / mean_debit2, (-Ps + Ps2) / mean_debit3]
+
+resist_equiv = np.array(tab_Resist).sum()
+
+print("la résistance équivalente en Poiseuille est", resist_equiv)
+
+resist = (Pe - Ps) / mean_debit
+
+print("la résistance est", resist)
+
+##########la partie affichage##########
+
+
+x = np.linspace(0, N - 1, N)
+
+y = np.linspace(0, M - 1, M)
+
+X, Y = np.meshgrid(x, y)
+
+# UY
+
+Z = Uy.reshape(M, N)
+
+fig, ax = plt.subplots()
+
+pc = ax.pcolormesh(X, Y, Z, shading='auto')
+
+fig.colorbar(pc)
+
+plt.scatter(xb, yb, s=130, c='red', marker='.')
+
+plt.scatter(xh, yh, s=50, c='red', marker='.', linewidth=3)
+
+plt.title('Vitesse Uy')
+
+# UX
+
+Z = Ux.reshape(M, N)
+
+fig, ax = plt.subplots()
+
+pc = ax.pcolormesh(X, Y, Z, shading='auto')
+
+fig.colorbar(pc)
+
+plt.scatter(xb, yb, s=130, c='red', marker='.')
+
+plt.scatter(xh, yh, s=50, c='red', marker='.', linewidth=3)
+
+plt.title('Vitesse Ux')
+
+# U
+
+
+Z = U.reshape(M, N)
+
+fig, ax = plt.subplots()
+
+pc = ax.pcolormesh(X, Y, Z, shading='auto')
+
+fig.colorbar(pc)
+
+plt.scatter(xb, yb, s=130, c='red', marker='.')
+
+plt.scatter(xh, yh, s=50, c='red', marker='.', linewidth=3)
+
+plt.title('Vitesse')
+
+# la pression
+
+
+Z = P.reshape(M, N)
+
+fig, ax = plt.subplots()
+
+pc = ax.pcolormesh(X, Y, Z, shading='auto')
+
+fig.colorbar(pc)
+
+plt.scatter(xb, yb, s=130, c='red', marker='.')
+
+plt.scatter(xh, yh, s=50, c='red', marker='.', linewidth=3)
+
+plt.title('Pression')
+
+plt.show()
+
