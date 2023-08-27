@@ -165,6 +165,9 @@ This also aligns with what is depicted in our plots. Finally, for an additional 
 
 ### Case 2: Tube with a single constriction 
 
+We populate the matrix with the equations indicated in Figure 2, discretized in the same manner as in the first case. Solving the matrix equation yields the following velocity and pressure profiles:
+
+
 ## Testing
 
 ...
