@@ -139,10 +139,18 @@ These formulas serve as a means to verify the accuracy of our model. This will b
 Firstly, we observe that the Y-component is zero, and there is no variation in velocity along the X-direction, which is consistent with Poiseuille flow. Additionally, as seen in the figures below, we note that the pressure is linear, once again in accordance with Poiseuille flow.
 
 <p align="center">
-  <img src="Images/ux_poiseuille.png" alt="ux Poiseuille" width="250" height="200" style="margin-right: 20px;"/>
-  <img src="Images/uy_poiseuille.png" alt="uy Poiseuille" width="250" height="200" style="margin-left: 20px;"/>
+  <img src="Images/velocity_poiseuille.png" alt="velocity Poiseuille" width="250" height="200" style="margin-right: 20px;"/>
+  <img src="Images/pressure_poiseuille.png" alt="pressure Poiseuille" width="250" height="200" style="margin-left: 20px;"/>
 </p>
+But, this isn't enough; we need to verify the values of the maximum velocity and flow rate before confirming. According to the formulas derived earlier, for the 4th generation:
 
+$$Umax = 0.22 m/s \text{ and } Q = 0.0011 m²/s.$$
+
+This also aligns with what is depicted in our plots. Finally, for an additional confirmation, we plot the velocity profile and observe that it exactly matches that of Poiseuille flow.
+
+<p align="center">
+  <img src="Images/velocity_profile.png" alt="velocity Poiseuille" width="250" height="200"/>
+</p>
 ## Testing
 
 ...
