@@ -199,13 +199,19 @@ Tests will be run on this solution in the following section.
 
 ### Case 3: Tube with several constrictions
 
-This time, we focus on the case of a tube with multiple constrictions to approach the scenario of a bronchus affected by asthma. We manage to obtain the following velocity and pressure profiles:
+This time, we focus on the case of a tube with multiple constrictions to approach the scenario of a bronchus affected by asthma. We manage to obtain the following velocity and pressure profiles using `2D case with one tightening.py`:
 
 <p align="center">
-  <img src="Images/velocity_alpha.png" alt="velocity alpha" width="250" height="200" style="margin-right: 20px;"/>
-  <img src="Images/pressure_alpha.png" alt="pressure alpha" width="250" height="200" style="margin-left: 20px;"/>
+  <img src="Images/velocit_multi_constr.png" alt="velocity multi constr" width="250" height="200" style="margin-right: 20px;"/>
+  <img src="Images/pressure_mult_constr.png" alt="pressure multi constr" width="250" height="200" style="margin-left: 20px;"/>
 </p>
 
+
+We notice that the velocity increases in the constriction area and then decreases as the tube widens again. As for pressure, it decreases while traversing the tube from the inlet to the outlet.
+
+From these obtained results, we successfully calculated the flow rate in an asthmatic person **(0.00125 m² s⁻¹)** and deduced the resistance value **(11.67 SI units)**. By comparing these values with those of a normal person, we observe that the flow rate in an asthmatic person decreases by a percentage of **76%**.
+
+We then managed to find the equivalent straight tube for the deformed one that maintains the same flow rate. This tube has a diameter of **D=0.00487 m**.
 
 ## Testing
 
