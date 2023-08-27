@@ -129,7 +129,7 @@ These formulas serve as a means to verify the accuracy of our model. This will b
 In the pursuit of modeling the asthma problem and after studying the simplistic scenario of a straight tube, we introduce a single constriction to our tube. In this initial step, the constriction has a width of $\epsilon_2$ and a length of $\epsilon_1$. Our tube takes on the following form:
 
 <p align="center">
-  <img src="Images/one_tightening.png" alt="ux Poiseuille" style="margin-right: 20px;"/>
+  <img src="Images/one_tightening1.png" alt="ux Poiseuille" style="margin-right: 20px;"/>
 </p>
 
 
