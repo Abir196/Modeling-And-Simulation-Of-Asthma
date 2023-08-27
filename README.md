@@ -136,7 +136,7 @@ In the pursuit of modeling the asthma problem and after studying the simplistic 
 To model the fluid flow inside the tube, we need to formulate the flow equations along with appropriate boundary conditions to obtain plausible results. The equations and boundary conditions we have chosen are as follows:
 
 <p align="center">
-  <img src="Images/one_tightening_model.png" alt="ux Poiseuille"/>
+  <img src="Images/one_tightening_model1.png" alt="ux Poiseuille"/>
 </p>
 
 
