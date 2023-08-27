@@ -13,7 +13,10 @@ This README provides an overview of our project's goals, approach, results, test
 
 ## Introduction
 
-...
+![respiratory system](Images/respiratory system.jpg)
+
+The consumption of oxygen and the production of carbon dioxide are essential for generating the necessary amount of energy for each individual. Therefore, the human body requires a system that ensures this process. We are talking about the respiratory system.
+The respiratory system consists of respiratory pathways that facilitate the exchange of air between the lungs and the atmosphere (nasal cavity, trachea, etc.) and intrapulmonary pathways that carry air from the respiratory pathways to the pulmonary alveoli; these are referred to as bronchi and bronchioles. These can be affected by several diseases, including bronchitis, asthma, and bronchiectasis.
 
 ## Mathematical Modeling Approach
 
