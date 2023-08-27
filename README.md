@@ -132,10 +132,16 @@ These formulas serve as a means to verify the accuracy of our model. This will b
 ## Results
 
 ### Case1: Poiseuille flow:
-<div style="display: flex; justify-content: space-between;">
-  <img src="Images/ux_poiseuille.png" alt="ux Poiseuille" width="400" height="300">
-  <img src="Images/uy_poiseuille.png" alt="uy Poiseuille" width="400" height="300">
-</div>
+<p align="center">
+  <img src="Images/ux_poiseuille.png" alt="ux Poiseuille" width="250" height="200" style="margin-right: 20px;"/>
+  <img src="Images/uy_poiseuille.png" alt="uy Poiseuille" width="250" height="200" style="margin-left: 20px;"/>
+</p>
+Firstly, we observe that the Y-component is zero, and there is no variation in velocity along the X-direction, which is consistent with Poiseuille flow. Additionally, as seen in the figures below, we note that the pressure is linear, once again in accordance with Poiseuille flow.
+
+<p align="center">
+  <img src="Images/ux_poiseuille.png" alt="ux Poiseuille" width="250" height="200" style="margin-right: 20px;"/>
+  <img src="Images/uy_poiseuille.png" alt="uy Poiseuille" width="250" height="200" style="margin-left: 20px;"/>
+</p>
 
 ## Testing
 
