@@ -125,6 +125,9 @@ $$
 
 These formulas serve as a means to verify the accuracy of our model. This will be verified later in the results' section.
 
+### Case 2: Tube with a single constriction
+In the pursuit of modeling the asthma problem and after studying the simplistic scenario of a straight tube, we introduce a single constriction to our tube. In this initial step, the constriction has a width of $\epsilon_2$ and a length of $\epsilon_1$. Our tube takes on the following form:
+
 
 
 
@@ -151,6 +154,9 @@ This also aligns with what is depicted in our plots. Finally, for an additional 
 <p align="center">
   <img src="Images/velocity_profile.png" alt="velocity Poiseuille" width="250" height="200"/>
 </p>
+
+### Case 2: Tube with a single constriction 
+
 ## Testing
 
 ...
