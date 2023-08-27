@@ -21,7 +21,7 @@ The consumption of oxygen and the production of carbon dioxide are essential for
 The respiratory system consists of respiratory pathways that facilitate the exchange of air between the lungs and the atmosphere (nasal cavity, trachea, etc.) and intrapulmonary pathways that carry air from the respiratory pathways to the pulmonary alveoli; these are referred to as bronchi and bronchioles. These can be affected by several diseases, including bronchitis, asthma, and bronchiectasis.
 
 <div align="center">
-  <img src="Images/respiratory_system.jpg" alt="respiratory system">
+  <img src="Images/Asthma_diagram.jpg" alt="respiratory system">
 </div>
 
 Asthma, derived from the Greek word "Azein" meaning to breathe with difficulty, is an allergic respiratory issue that causes chronic inflammation of the airways. It's marked by recurring episodes of wheezing and breathing difficulty. Asthma symptoms involve three pathological processes: 
