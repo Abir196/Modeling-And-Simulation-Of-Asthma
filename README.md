@@ -199,7 +199,7 @@ Tests will be run on this solution in the following section.
 
 ### Case 3: Tube with several constrictions
 
-This time, we focus on the case of a tube with multiple constrictions to approach the scenario of a bronchus affected by asthma. We manage to obtain the following velocity and pressure profiles using `2D case with one tightening.py`:
+This time, we focus on the case of a tube with multiple constrictions to approach the scenario of a bronchus affected by asthma. We manage to obtain the following velocity and pressure profiles using `2D case with several tightenings.py`:
 
 <p align="center">
   <img src="Images/velocit_multi_constr.png" alt="velocity multi constr" width="250" height="200" style="margin-right: 20px;"/>
