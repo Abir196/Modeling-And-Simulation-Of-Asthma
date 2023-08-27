@@ -178,7 +178,7 @@ The result of solving our matrix system indeed reveals plausible profiles. The v
 1. Can we improve our solver to obtain smoother solutions with fewer grid artifacts during display?
 2. Have we properly solved our system? In other words, do the recovered profiles indeed satisfy A.X = B?
 
-The answer to the second question seems more straightforward. In fact, we compute the norm of the vector AX - B: ‖AX -  B‖: `/2D case with one tightening.py` we find that it's indeed equal to 0. Thus, the two retrieved profiles are indeed solutions to our problem.
+The answer to the second question seems more straightforward. In fact, we compute the norm of the vector AX - B: ‖AX -  B‖: `/Tests/verifying the solution.py` we find that it's indeed equal to 0. Thus, the two retrieved profiles are indeed solutions to our problem.
 
 For the second question, the answer requires some effort. The issue of grid artifacts in the middle arises from using centered differences when discretizing the equations. The solution is to replace them with one-sided differences, but life isn't as simple! Centered differences allow us to achieve more accurate solutions that preserve flow (99% accuracy). Therefore, Question 1 boils down to finding a compromise between flow conservation and solution smoothness (lack of grid artifacts). We introduce a factor $\alpha$ that belongs to the interval $[0,1]$, which from this point forward plays a crucial role in solving our problem. $\alpha$ helps us define a new derivative, introduced as follows:
 $$(dg_i)/dx_{new}=α.(g_{i+1}-g_{i-1})/(2.dx)+(1-α).(g_i-g_{i-1})/dx$$
@@ -186,7 +186,7 @@ $$(dg_i)/dx_{new}=α.(g_{i+1}-g_{i-1})/(2.dx)+(1-α).(g_i-g_{i-1})/dx$$
 
 This new form of the derivative ensures two major objectives: maximizing flow conservation and presenting a smoother solution with fewer grid artifacts.
 
-Our study led us to a factor α=0.9, and the solution obtained after introducing this factor is as follows:
+Our study led us to a factor α=0.9, and the solution obtained with `2D case with one tightening.py` after introducing this factor is as follows:
 
 <p align="center">
   <img src="Images/velocity_alpha.png" alt="velocity alpha" width="250" height="200" style="margin-right: 20px;"/>
@@ -197,11 +197,53 @@ With α=0.9, the variation in flow is 1.13%, and the solutions are smoother than
 
 Tests will be run on this solution in the following section.
 
+### Case 3: Tube with several constrictions
+
+This time, we focus on the case of a tube with multiple constrictions to approach the scenario of a bronchus affected by asthma. We manage to obtain the following velocity and pressure profiles:
+
+<p align="center">
+  <img src="Images/velocity_alpha.png" alt="velocity alpha" width="250" height="200" style="margin-right: 20px;"/>
+  <img src="Images/pressure_alpha.png" alt="pressure alpha" width="250" height="200" style="margin-left: 20px;"/>
+</p>
+
+
 ## Testing
+
+### Case 2: Tube with one constriction:
 
 Now that we have established the general profile of our solution, it's time to conduct a study on this solution to gather more insights:
 
-Firstly, we ensure the validity of our visual observations. The Poiseuille profile outside the constriction and the modification within the constriction must be verified. To do this, we plot the velocity curve across several cross-sections before, during, and after the constriction. The result is as follows:
+Firstly, we ensure the validity of our visual observations. The Poiseuille profile outside the constriction and the modification within the constriction must be verified. To do this, we plot the velocity curve across several cross-sections before, during, and after the constriction. The result with `/Tests/velocity's evolution.py` is as follows:
+
+<p align="center">
+  <img src="Images/velocitie.png" alt="velocities" width="250" height="200" style="margin-right: 20px;"/>
+</p>
+
+We observe that before the constriction, the velocity followed a Poiseuille profile: the parabola associated with the equation $y = ax^2 + bx + c$. During the constriction, the velocity profile gradually deviates from the Poiseuille profile. At the exit of the constriction, the profile gradually returns once again toward the Poiseuille profile. This study is crucial to ensure the validity of the local Poiseuille profile throughout a sufficiently long portion of the tube where there is no deformation.
+
+We now move on to the study of the flow rate, a crucial parameter. We have plotted the evolution of the inlet flow rate and the average flow rate as a function of mesh size. The result is as follows:
+
+<p align="center">
+  <img src="Images/flow rate with maillage.png" alt="velocities" width="250" height="200" style="margin-right: 20px;"/>
+</p>
+
+We notice that the flow rate increases with the mesh size. For N=100, the flow rate starts to converge towards its limiting value. This suggests that N=100 is a good mesh size choice that balances both program execution speed and a value close to the limiting flow rate. Another observation from this curve is that for relatively small mesh sizes (around 10 to 20), the flow rate seems to be constant (the curves overlap). In conclusion, it's advisable to avoid working with small mesh sizes as they often yield misleading results!
+
+Now, we vary the dimensions of the constriction ε₁ and ε₂ and note the change in flow rate based on these dimensions. The results using `/Tests/flow rate's variation with respect to epsilon1.py` are as follows:
+
+<p align="center">
+  <img src="Images/flow rate with eps1.png" alt="velocities" width="250" height="200" style="margin-right: 20px;"/>
+</p>
+
+We observe that as the value of ε₁ increases, the fluid flow is increasingly blocked, and the flow rate tends towards 0. On the contrary, as the value of ε₁ approaches 0, the flow rate becomes larger and tends towards the flow rate value found for a straight tube, which was 0.001. In conclusion, the smaller the deformation, the closer the tube's behavior resembles that of a straight tube!
+
+<p align="center">
+  <img src="Images/flow rate with eps2.png" alt="velocities" width="250" height="200" style="margin-right: 20px;"/>
+</p>
+
+Now we move on to ε₂. We conduct a similar study using `/Tests/flow rate's variation with respect to epsilon2.py`, this time varying the value of ε₂ and observing its influence on the flow rate. As shown below, we note the change in flow rate as ε₂ changes. The narrower we make the constriction, the more the flow rate increases. This result aligns with our expectations!
+
+
 
 
 ## Usage
