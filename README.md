@@ -7,10 +7,6 @@ This README provides an overview of our project's goals, approach, results, test
 - [Mathematical Modeling Approach](#mathematical-modeling-approach)
 - [Results](#results)
 - [Testing](#testing)
-- [Usage](#usage)
-- [Contribution Guidelines](#contribution-guidelines)
-- [License](#license)
-- [Contact](#contact)
 
 ## Introduction
 
@@ -249,21 +245,3 @@ We observe that as the value of ε₁ increases, the fluid flow is increasingly 
 
 Now we move on to ε₂. We conduct a similar study using `/Tests/flow rate's variation with respect to epsilon2.py`, this time varying the value of ε₂ and observing its influence on the flow rate. As shown below, we note the change in flow rate as ε₂ changes. The narrower we make the constriction, the more the flow rate increases. This result aligns with our expectations!
 
-
-
-
-## Usage
-
-...
-
-## Contribution Guidelines
-
-...
-
-## License
-
-...
-
-## Contact
-
-...
