@@ -1,4 +1,4 @@
-# Modeling-and-simulation-of-asthma
+# Modeling-And-Simulation-Of-Asthma
 This project aims to develop a computational model to simulate and study the dynamics of asthma, providing insights into its behavior and potential interventions.
 
 This README provides an overview of our project's goals, approach, results, testing procedures, and usage instructions. Navigate through the sections below to learn more about each aspect of the project.
